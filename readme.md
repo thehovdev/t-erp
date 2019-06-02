@@ -2,8 +2,8 @@
 
 ## About T-ERP based on Laravel 5.8
 
-1 - php artisan migrate
-2 - php artisan db:seed
-3 - start testing app
+<p>php artisan migrate</p>
+<p>php artisan db:seed</p>
+<p>start testing app</p>
 
-available users in UserTableSeeder::class
+<citate>available users in UserTableSeeder::class</citate>
