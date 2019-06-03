@@ -16,12 +16,12 @@ class ProductController extends Controller
     {
         // return view('product.index');
     }
-
+    // form to create new product
     public function create($id)
     {
         return view('product.create')->with('id', $id);
     }
-
+    // form to edit existing product
     public function edit($product_id, $id) 
     {
         $product = new Product;
@@ -34,7 +34,7 @@ class ProductController extends Controller
             ->with('product', $product)
             ->with('id', $id);
     }
-
+    // form to send existing product to another user storage
     public function send($id) 
     {
         $user = Auth::user();
@@ -48,6 +48,7 @@ class ProductController extends Controller
             ->with('receivers', $receivers);
     }
 
+    // return back product from receiver storage to user storage
     // dependency injection for find journal id
     public function returnback(Journal $inaction) {
         $action = json_decode($inaction->action);
@@ -60,7 +61,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-
+    // send selected product to receiver storage
     public function sendtoreceiver(Request $request) {
         $request->validate([
             'product_id' => 'required',
@@ -89,7 +90,7 @@ class ProductController extends Controller
         }
         return redirect()->route('storage.list', $request->storage_id);
     }
-
+    // insert new product
     public function store(Request $request)
     {
         $request->validate([
@@ -120,7 +121,7 @@ class ProductController extends Controller
         // else redirect back to index
         return redirect()->route('storage.index');
     }
-
+    // update existing product data
     public function update($product_id, $id, Request $request) {
         $request->validate([
             'name' => 'required',
@@ -135,15 +136,17 @@ class ProductController extends Controller
         }
 
         return redirect()->route('storage.list', $id);
-
     }
 
-
+    // delete product
     public function destroy($id)
     {
 
         if(!is_null($id)) {
+            // get current user
             $user = Auth::user();
+            // delete product if user his owner
+            // use relations
             $product = $user->product($id)->delete();
         }
 

@@ -15,6 +15,7 @@ class Product extends Model
             ->first();
     }
 
+    // ad new product with count
     public function add($request) {
         // get product from system
         $product = $this->get($request->name);
@@ -25,6 +26,7 @@ class Product extends Model
             $product->count = 0;
         }
 
+        // insert new product to system
         $product->user_id = Auth::id();
         $product->storage_id = $request->storage_id;
         $product->name = $request->name;
@@ -35,7 +37,7 @@ class Product extends Model
         return $product;
     }
 
-
+    // add product with serial numbers
     public function addWithSerials($request, $snumbers) {
         // get product from system
         $product = $this->get($request->name);
@@ -43,10 +45,12 @@ class Product extends Model
         // if product does not exists in system then its new product
         if (is_null($product)) {
             $product = $this;
-            $product->count = 0;
+            $product->count = 0; // set product count 0 because its new product
             $serial = $snumbers;
         } else {
+            // if its not new product, then get his serial from json string
             $serial = json_decode($product->serial, true);
+            // merge existing serial numbers and new serial numbers to new array
             $serial = array_merge($serial, $snumbers);
             $serial = array_combine(range(1, count($serial)), $serial);
         }
@@ -55,23 +59,23 @@ class Product extends Model
         $product->storage_id = $request->storage_id;
         $product->name = $request->name;
         $product->price = $request->price;
+        // sum current product count with sum of newly added products
         $product->count = $product->count + count($snumbers);
+        // encode to json and add serial numbers to product
         $product->serial = json_encode($serial);
         $product->save();
 
         return $product;
     }
 
-
+    // function to send product from one user to another
     public function sendFromUser($request) {
-
         $product = $this->find($request->product_id);
 
         if(!is_null($request->count)) {
             if(!is_null($product->serial)) {
                 $productSnumbers = json_decode($product->serial, true);
                 $productSnumbersCount = count($productSnumbers);
-
                 if($product->count - $productSnumbersCount != $request->count) {
                     return false;
                 }

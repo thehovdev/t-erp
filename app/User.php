@@ -45,8 +45,6 @@ class User extends Authenticatable
         $user = Auth::user();
         $user_role = Role::find($user->role_id);
 
-        // 'buyer', 'sales', 'supplier'
-
         $receivers = null;
         switch($user_role->name) {
             case 'supplier':
