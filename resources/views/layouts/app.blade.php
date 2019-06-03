@@ -95,7 +95,7 @@
                             <li class="list-group-item">Journal(in)</li>
                         </a>
 
-                        @if(Auth::user()->role_id !== 1)
+                        @if(Auth::user()->role_id != 1)
                             <a href="{{ route('journal.out') }}" class="my-2">
                                 <li class="list-group-item">Journal(out)</li>
                             </a>
